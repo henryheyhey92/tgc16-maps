@@ -35,3 +35,41 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
     accessToken: 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw' //demo access token
 }).addTo(map);
 
+// A layer group can contain other layers
+// A layer can be: a layer group, or a marker, or a shape or etc etc etc
+let group = L.layerGroup(); // create a new layer group
+
+// add ten different random markers to the layer group
+for (let i = 0; i < 10; i++) {
+    let m = L.marker(getRandomLatLng(map));
+    m.addTo(group);
+}
+group.addTo(map);
+
+// create ten random green circles and add to group 2
+let group2 = L.layerGroup();
+for (let i = 0; i < 10; i++) {
+    let pos = getRandomLatLng(map);
+    let c = L.circle(pos, {
+        color: 'red',
+        fillColor: 'green',
+        fillOpacity: 0.5,
+        radius: 250
+    } );
+    c.addTo(group2);
+}
+group2.addTo(map);
+
+// create ten random orange circles and add to group 3
+let group3 = L.layerGroup();
+for (let i = 0; i < 10; i++) {
+    let pos = getRandomLatLng(map);
+    let c = L.circle(pos, {
+        color: 'red',
+        fillColor: 'orange',
+        fillOpacity: 0.5,
+        radius: 250
+    } );
+    c.addTo(group3);
+}
+group3.addTo(map);
