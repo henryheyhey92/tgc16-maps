@@ -12,7 +12,8 @@ async function search(lat, lng, query) {
         params: {
             'll': ll,
             'v': '20220211', // lock the version of foursquare to the one on this date,
-            'query': query
+            'query': query,
+            'radius': 100000
         } ,
         headers:{
             'Accept':'application/json',
