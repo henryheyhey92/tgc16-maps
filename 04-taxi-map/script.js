@@ -1,21 +1,24 @@
-function getRandomLatLng(map) {
-    // get the boundaries of the map
-    let bounds = map.getBounds();
-
-    // get the upper right and lower left of the map window
-    // in lat lng
-    let southwest = bounds.getSouthWest();
-    let northeast = bounds.getNorthEast();
-
-    // we calculate the length and width of the map window in lat,lng   
-    let lngSpan = northeast.lng - southwest.lng;
-    let latSpan = northeast.lat - southwest.lat;
-
-    let randomLng = (Math.random() * lngSpan) + southwest.lng;
-    let randomLat = (Math.random() * latSpan) + southwest.lat;
-
-    return [randomLat, randomLng];
+async function getTaxi() {
+    let response = await axios.get("https://api.data.gov.sg/v1/transport/taxi-availability");
+    return response.data.features[0].geometry.coordinates;
 }
+
+window.addEventListener("DOMContentLoaded", async function(){
+    // wait for getTaxi to finish and then store its return value
+    // into taxiCoordinates
+    let taxiCoordinates = await getTaxi();
+    let markerClusterLayer = L.markerClusterGroup();
+    for (let t of taxiCoordinates) {
+        // each t is an array
+        // element 0 is lng, element 1 is lat
+        let lat = t[1];
+        let lng = t[0];
+        let marker = L.marker([lat,lng]);
+        marker.addTo(markerClusterLayer);
+    }
+    markerClusterLayer.addTo(map);
+
+});
 
 // we need a center position for our map
 // to be the starting position
@@ -40,14 +43,3 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
     accessToken: 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw' //demo access token
 }).addTo(map);
 
-// create a marker cluster layer
-let markerClusterLayer = L.markerClusterGroup(); // available be'cos we include in
-                                                 // marker cluster group js and css
-
-for (let i =0; i < 1000; i++) {
-    let pos = getRandomLatLng(map);
-    let marker = L.marker(pos);
-    marker.addTo(markerClusterLayer);
-}
-
-markerClusterLayer.addTo(map);
