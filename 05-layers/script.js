@@ -73,3 +73,36 @@ for (let i = 0; i < 10; i++) {
     c.addTo(group3);
 }
 group3.addTo(map);
+
+let markerCluster = L.markerClusterGroup();
+for (let i=0; i< 500; i++) {
+    let pos = getRandomLatLng(map);
+    L.marker(pos).addTo(markerCluster);
+}
+markerCluster.addTo(map);
+
+// base layers: must choose at least one and only one
+let baseLayers = {
+    'Markers': group,
+    'Green Circles': group2,
+}
+
+// ovelays: can toggle on or off individual for each layer
+let overlays = {
+        'Red Circles': group3,
+        'Clusters': markerCluster
+}
+
+// add the overlays to the map
+L.control.layers(baseLayers, overlays).addTo(map);
+
+document.querySelector('#btnToggle')
+    .addEventListener('click', function(){
+        // if the map already has group3 layer, remove it
+        if (map.hasLayer(group3)) {
+            map.removeLayer(group3);
+        } else {
+            // if the map does not have the group3 layer, add it
+            map.addLayer(group3);
+        }
+    })
