@@ -1,0 +1,23 @@
+const API_BASE_URL="https://api.foursquare.com/v3";
+const API_KEY="fsq3fIlixtpBlKxnWFqaBk7MxdqugW3DK1Fp5koUl+K/k6Q=";
+
+async function search(lat, lng, query) {
+    let ll = lat + ',' + lng;
+
+    // example:
+    // if ll is "103,31"
+    // and query is "chicken rice"
+    // then the query string will be "?ll=103,31&query=chicken rice&v=20220211"
+    let response = await axios.get(API_BASE_URL + '/places/search',{
+        params: {
+            'll': ll,
+            'v': '20220211', // lock the version of foursquare to the one on this date,
+            'query': query
+        } ,
+        headers:{
+            'Accept':'application/json',
+            'Authorization':API_KEY
+        }
+    })
+    return response.data;
+}
